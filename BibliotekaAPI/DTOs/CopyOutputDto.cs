@@ -10,11 +10,9 @@ namespace BibliotekaAPI.DTOs
         [JsonPropertyName("status")]
         public string Status { get; set; } = "Dostępny";
 
-        // KOREKTA: Zmiana na snake_case
         [JsonPropertyName("book_id")]
         public int BookId { get; set; }
 
-        // KOREKTA: Zmiana na snake_case
         [JsonPropertyName("book_title")]
         public string BookTitle { get; set; } = null!;
     }
