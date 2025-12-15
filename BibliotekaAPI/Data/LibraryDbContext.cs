@@ -11,7 +11,7 @@ namespace BibliotekaAPI.Data
 
         public DbSet<Author> Authors { get; set; }
         public DbSet<Book> Books { get; set; }
-        public DbSet<Copy> Copies { get; set; } // KONIECZNE DO KOMPILACJI
+        public DbSet<Copy> Copies { get; set; } 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
