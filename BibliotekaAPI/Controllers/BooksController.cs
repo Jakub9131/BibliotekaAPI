@@ -34,7 +34,6 @@ namespace BibliotekaAPI.Controllers
             };
         }
 
-        // GET: /books  <--- PRZYWRÓCONA METODA
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BookOutputDto>>> GetBooks([FromQuery] int? authorId)
         {
@@ -51,7 +50,6 @@ namespace BibliotekaAPI.Controllers
             return Ok(bookDtos);
         }
 
-        // GET: /books/5  <--- PRZYWRÓCONA METODA (usuwa CS0101)
         [HttpGet("{id}")]
         public async Task<ActionResult<BookOutputDto>> GetBook(int id)
         {
@@ -67,7 +65,6 @@ namespace BibliotekaAPI.Controllers
             return Ok(MapToOutputDto(book));
         }
 
-        // POST: /books
         [HttpPost]
         public async Task<ActionResult<BookOutputDto>> CreateBook(BookCreateUpdateDto bookDto)
         {
@@ -78,7 +75,6 @@ namespace BibliotekaAPI.Controllers
 
             if (!int.TryParse(bookDto.AuthorId, out int authorId) || authorId <= 0)
             {
-                // KOREKTA JSON: "author_id"
                 ModelState.AddModelError("author_id", "ID autora musi być poprawną, dodatnią liczbą całkowitą.");
             }
 
@@ -115,9 +111,6 @@ namespace BibliotekaAPI.Controllers
             return CreatedAtAction(nameof(GetBook), new { id = createdBook.Id }, MapToOutputDto(createdBook));
         }
 
-        // ... (PUT i DELETE jak wcześniej)
-
-        // DELETE: /books/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBook(int id)
         {
@@ -127,7 +120,6 @@ namespace BibliotekaAPI.Controllers
                 return NotFound();
             }
 
-            // PRZYWRÓCONY WARUNEK: Wymaga istnienia modelu Copy i DbSet<Copy>
             if (await _context.Copies.AnyAsync(c => c.BookId == id))
             {
                 return BadRequest("Nie można usunąć książki, która ma przypisane egzemplarze. Najpierw usuń egzemplarze.");
