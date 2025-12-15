@@ -14,7 +14,7 @@ namespace BibliotekaAPI.DTOs
         [JsonPropertyName("year")]
         public int Year { get; set; } 
 
-        [JsonPropertyName("author")] // Zagnieżdżony obiekt musi być "author"
-        public AuthorDto Author { get; set; } = null!; // Pełny obiekt autora
+        [JsonPropertyName("author")] 
+        public AuthorDto Author { get; set; } = null!; 
     }
 }
