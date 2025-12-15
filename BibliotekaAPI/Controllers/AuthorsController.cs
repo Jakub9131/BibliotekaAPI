@@ -18,7 +18,6 @@ namespace BibliotekaAPI.Controllers
             _context = context;
         }
 
-        // GET: /authors
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AuthorDto>>> GetAuthors()
         {
@@ -28,14 +27,12 @@ namespace BibliotekaAPI.Controllers
             {
                 Id = a.Id,
                 FirstName = a.FirstName,
-                // KOREKTA 5: Wymuszamy zwracanie "" zamiast null
                 LastName = a.LastName ?? ""
             }).ToList();
 
             return Ok(authorDtos);
         }
 
-        // GET: /authors/5
         [HttpGet("{id}")]
         public async Task<ActionResult<AuthorDto>> GetAuthor(int id)
         {
@@ -57,7 +54,6 @@ namespace BibliotekaAPI.Controllers
             return Ok(authorDto);
         }
 
-        // POST: /authors
         [HttpPost]
         public async Task<ActionResult<AuthorDto>> CreateAuthor(AuthorDto authorDto)
         {
@@ -80,12 +76,9 @@ namespace BibliotekaAPI.Controllers
             return CreatedAtAction(nameof(GetAuthor), new { id = author.Id }, authorDto);
         }
 
-        // PUT: /authors/5
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateAuthor(int id, AuthorDto authorDto)
         {
-            // KOREKTA 6: Obsługa int? Id (nullable) dla PUT, gdy ID nie jest w ciele JSON.
-            // Sprawdzenie, czy Id w DTO jest podane (ma wartość) i jest różne od ID w URL.
             if (authorDto.Id.HasValue && id != authorDto.Id.Value)
             {
                 return BadRequest("ID w adresie URL musi pasować do ID w ciele żądania.");
@@ -122,7 +115,6 @@ namespace BibliotekaAPI.Controllers
             return NoContent();
         }
 
-        // DELETE: /authors/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAuthor(int id)
         {
