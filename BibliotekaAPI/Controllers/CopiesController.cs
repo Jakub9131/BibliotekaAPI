@@ -7,7 +7,6 @@ using System.Linq;
 
 namespace BibliotekaAPI.Controllers
 {
-    // OSTATECZNA KOREKTA: Dopasowanie do routingu JS (usunieto "api/")
     [Route("[controller]")]
     [ApiController]
     public class CopiesController : ControllerBase
@@ -19,24 +18,20 @@ namespace BibliotekaAPI.Controllers
             _context = context;
         }
 
-        // Funkcja pomocnicza do mapowania Copy -> CopyOutputDto
         private static CopyOutputDto MapToOutputDto(Copy copy)
         {
-            // Zakładamy, że Book jest załadowany, aby pobrać Title
             return new CopyOutputDto
             {
                 Id = copy.Id,
                 Status = copy.Status,
                 BookId = copy.BookId,
-                BookTitle = copy.Book.Title // Pobieranie tytułu z obiektu nawigacyjnego
+                BookTitle = copy.Book.Title 
             };
         }
 
-        // GET: /copies
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CopyOutputDto>>> GetCopies()
         {
-            // Niezbędne: załadowanie Książki (.Include)
             var copies = await _context.Copies
                                          .Include(c => c.Book)
                                          .ToListAsync();
@@ -46,12 +41,11 @@ namespace BibliotekaAPI.Controllers
             return Ok(copyDtos);
         }
 
-        // GET: /copies/5
         [HttpGet("{id}")]
         public async Task<ActionResult<CopyOutputDto>> GetCopy(int id)
         {
             var copy = await _context.Copies
-                .Include(c => c.Book) // Niezbędne, by zwrócić tytuł
+                .Include(c => c.Book) 
                 .FirstOrDefaultAsync(c => c.Id == id);
 
             if (copy == null)
@@ -62,7 +56,6 @@ namespace BibliotekaAPI.Controllers
             return Ok(MapToOutputDto(copy));
         }
 
-        // POST: /copies
         [HttpPost]
         public async Task<ActionResult<CopyOutputDto>> CreateCopy(CopyCreateUpdateDto copyDto)
         {
@@ -70,8 +63,6 @@ namespace BibliotekaAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-            // Walidacja: Sprawdzenie, czy BookId istnieje
             var bookExists = await _context.Books.AnyAsync(b => b.Id == copyDto.BookId);
             if (!bookExists)
             {
@@ -87,7 +78,6 @@ namespace BibliotekaAPI.Controllers
             _context.Copies.Add(copy);
             await _context.SaveChangesAsync();
 
-            // Ponowne załadowanie, by uzyskać dostęp do tytułu książki
             var createdCopy = await _context.Copies
                                              .Include(c => c.Book)
                                              .FirstAsync(c => c.Id == copy.Id);
@@ -95,7 +85,6 @@ namespace BibliotekaAPI.Controllers
             return CreatedAtAction(nameof(GetCopy), new { id = createdCopy.Id }, MapToOutputDto(createdCopy));
         }
 
-        // PUT: /copies/5
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCopy(int id, CopyCreateUpdateDto copyDto)
         {
@@ -104,7 +93,6 @@ namespace BibliotekaAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            // Sprawdzenie, czy BookId nadal istnieje (jeśli zmieniamy Książkę)
             var bookExists = await _context.Books.AnyAsync(b => b.Id == copyDto.BookId);
             if (!bookExists)
             {
@@ -117,9 +105,8 @@ namespace BibliotekaAPI.Controllers
                 return NotFound();
             }
 
-            // Aktualizacja
             copy.BookId = copyDto.BookId;
-            copy.Status = copyDto.Status ?? copy.Status; // Aktualizuj tylko, jeśli Status jest podany
+            copy.Status = copyDto.Status ?? copy.Status; 
 
             try
             {
@@ -138,7 +125,6 @@ namespace BibliotekaAPI.Controllers
             return NoContent();
         }
 
-        // DELETE: /copies/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCopy(int id)
         {
