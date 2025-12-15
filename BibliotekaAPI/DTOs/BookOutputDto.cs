@@ -1,5 +1,5 @@
-﻿using BibliotekaAPI.DTOs;// Niezbędne, aby używać AuthorDto
-using System.Text.Json.Serialization; // WAŻNE!
+﻿using BibliotekaAPI.DTOs;
+using System.Text.Json.Serialization;
 
 namespace BibliotekaAPI.DTOs
 {
